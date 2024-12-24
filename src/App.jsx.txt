@@ -1,0 +1,157 @@
+// App.jsx
+import React, { useState, useEffect } from 'react';
+import { 
+  Upload, Database, Search, ShoppingCart, Check, Package, 
+  UserCheck, CreditCard, Truck, ThumbsUp, DollarSign,
+  AlertCircle, User, Building, RefreshCw
+} from 'lucide-react';
+
+const App = () => {
+  const [currentStep, setCurrentStep] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  const steps = [
+    {
+      title: "Item Selection in SAP",
+      icon: <User className="text-purple-500" />,
+      description: "Seller manually selects items from SAP B1 inventory for marketplace listing",
+      actor: "Seller",
+      type: "Manual"
+    },
+    {
+      title: "SAP Synchronization",
+      icon: <RefreshCw className="text-blue-500" />,
+      description: "Selected items are automatically uploaded from SAP B1 to marketplace",
+      actor: "System",
+      type: "Automatic"
+    },
+    {
+      title: "Data Processing",
+      icon: <Database className="text-green-500" />,
+      description: "System organizes items from multiple sellers for optimal searchability",
+      actor: "System",
+      type: "Automatic"
+    },
+    {
+      title: "Buyer Shopping",
+      icon: <Search className="text-orange-500" />,
+      description: "Buyer searches, selects items, and completes payment",
+      actor: "Buyer",
+      type: "Manual"
+    },
+    {
+      title: "Order Processing",
+      icon: <CreditCard className="text-blue-500" />,
+      description: "System sends order to seller and holds payment in escrow",
+      actor: "System",
+      type: "Automatic"
+    },
+    {
+      title: "Seller Fulfillment",
+      icon: <Package className="text-purple-500" />,
+      description: "Seller prepares package and shipping documentation",
+      actor: "Seller",
+      type: "Manual"
+    },
+    {
+      title: "Delivery & Approval",
+      icon: <ThumbsUp className="text-orange-500" />,
+      description: "Buyer receives package and approves the purchase",
+      actor: "Buyer",
+      type: "Manual"
+    },
+    {
+      title: "Payment Settlement",
+      icon: <DollarSign className="text-green-500" />,
+      description: "System transfers payment to seller minus marketplace commission",
+      actor: "System",
+      type: "Automatic"
+    },
+    {
+      title: "Case Management",
+      icon: <AlertCircle className="text-red-500" />,
+      description: "Transaction completion or problem resolution handling",
+      actor: "System",
+      type: "Automatic"
+    }
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentStep((prev) => (prev + 1) % steps.length);
+      setIsAnimating(true);
+      setTimeout(() => setIsAnimating(false), 500);
+    }, 4000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const getActorColor = (actor) => {
+    switch(actor) {
+      case "Seller": return "bg-purple-100 border-purple-200";
+      case "Buyer": return "bg-orange-100 border-orange-200";
+      case "System": return "bg-blue-100 border-blue-200";
+      default: return "bg-gray-100 border-gray-200";
+    }
+  };
+
+  const getTypeIcon = (type) => {
+    return type === "Automatic" ? (
+      <RefreshCw className="w-4 h-4 text-blue-500" />
+    ) : (
+      <User className="w-4 h-4 text-gray-500" />
+    );
+  };
+
+  return (
+    <div className="p-8 max-w-6xl mx-auto bg-white rounded-xl shadow-lg">
+      <h2 className="text-2xl font-bold mb-8 text-center text-gray-800">
+        Complete Marketplace Process Flow
+      </h2>
+
+      <div className="flex flex-wrap justify-center gap-6">
+        {steps.map((step, index) => (
+          <div
+            key={index}
+            className={`flex flex-col items-center p-4 rounded-lg w-64 border-2 transition-all duration-500 
+              ${getActorColor(step.actor)}
+              ${currentStep === index ? 'scale-105 shadow-lg' : ''}
+              ${isAnimating && currentStep === index ? 'animate-pulse' : ''}`}
+          >
+            <div className="flex items-center gap-2 mb-2">
+              {step.icon}
+              {getTypeIcon(step.type)}
+            </div>
+            
+            <div className="flex items-center gap-2 mb-2">
+              <h3 className="text-sm font-semibold text-center">{step.title}</h3>
+            </div>
+            
+            <p className="text-xs text-center text-gray-600 mb-2">{step.description}</p>
+            
+            <div className="flex items-center gap-2 mt-auto">
+              <span className="text-xs font-medium px-2 py-1 rounded-full bg-gray-200">
+                {step.actor}
+              </span>
+              <span className="text-xs font-medium px-2 py-1 rounded-full bg-gray-200">
+                {step.type}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-8 flex justify-center gap-2">
+        {steps.map((_, index) => (
+          <div
+            key={index}
+            className={`w-2 h-2 rounded-full transition-all duration-300 
+              ${currentStep === index ? 'bg-blue-500 scale-125' : 'bg-gray-300'}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default App;
