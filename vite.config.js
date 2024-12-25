@@ -3,10 +3,5 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  build: {
-    outDir: 'dist',
-    rollupOptions: {
-      input: './index.html'
-    }
-  }
+  base: '/marketplace-flow-Demo/'  // Add this line - use your repo name
 })
